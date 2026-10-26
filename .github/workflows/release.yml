@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build universal binary (Intel + Apple Silicon)
-        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64 Snake.c lib/Console.c -o snake
+        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64 Snake.c lib/Console.c -o snake -lncurses
       - name: Add a double-clickable launcher
         run: |
           cat > snake.command <<'EOF'
