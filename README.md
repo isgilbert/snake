@@ -20,7 +20,14 @@ Prebuilt binaries are listed on the [Releases page](https://github.com/isgilbert
 
 - Linux: download `snake-linux-x86_64`. Mark it executable with
   `chmod +x snake-linux-x86_64`, then run it from a terminal.
-- macOS: download `snake.command` and double click. The game opens in a new
-  Terminal window.
+- macOS: download `snake-macos.zip` and unzip the executables. Then 
+  double-click `snake.command`. The game opens in a new Terminal window.
 - Windows: download `snake-windows-x64.exe` and double click. The game opens
   in a console window.
+
+The binaries are not code signed, so the first time you run one the operating
+system may warn that the developer cannot be verified.
+
+- macOS: right click the file, choose Open, and confirm. This is only required
+  the first time.
+- Windows: if a SmartScreen notice appears, choose More info, then Run anyway.
