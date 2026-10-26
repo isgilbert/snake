@@ -21,12 +21,21 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build universal (Intel + Apple Silicon)
-        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64
-             Snake.c lib/Console.c -o snake-macos -lncurses
-      - run: cp snake-macos snake.command && chmod +x snake.command
+      - name: Build universal binary (Intel + Apple Silicon)
+        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64 Snake.c lib/Console.c -o snake
+      - name: Add a double-clickable launcher
+        run: |
+          cat > snake.command <<'EOF'
+          #!/bin/bash
+          cd "$(dirname "$0")"
+          xattr -c snake 2>/dev/null
+          ./snake
+          EOF
+          chmod +x snake snake.command
+      - name: Package as a zip (preserves the run permission)
+        run: zip snake-macos.zip snake snake.command
       - uses: actions/upload-artifact@v4
-        with: { name: macos, path: "snake-macos\nsnake.command" }
+        with: { name: macos, path: snake-macos.zip }
 
   windows:
     runs-on: windows-latest
@@ -46,6 +55,5 @@ jobs:
         with:
           files: |
             linux/snake-linux-x86_64
-            macos/snake-macos
-            macos/snake.command
+            macos/snake-macos.zip
             windows/snake-windows-x64.exe
