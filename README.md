@@ -1,8 +1,6 @@
 # Snake
 
-<p align="center">
-  <img src="assets/demo.gif" alt="Snake gameplay" width="700">
-</p>
+![Snake gameplay](assets/demo.gif)
 
 A terminal version of the arcade game Snake, written in C.
 
