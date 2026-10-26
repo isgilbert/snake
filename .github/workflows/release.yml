@@ -16,13 +16,13 @@ jobs:
              -Wl,-Bstatic -lncurses -ltinfo -Wl,-Bdynamic
       - uses: actions/upload-artifact@v4
         with: { name: linux, path: snake-linux-x86_64 }
-
+  
   macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build universal binary (Intel + Apple Silicon)
-        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64 Snake.c lib/Console.c -o snake -lncurses
+        run: clang -std=c11 -O2 -mmacosx-version-min=11.0 -I./include -arch x86_64 -arch arm64 Snake.c lib/Console.c -o snake -lncurses
       - name: Add a double-clickable launcher
         run: |
           cat > snake.command <<'EOF'
