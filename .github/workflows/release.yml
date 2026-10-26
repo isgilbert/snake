@@ -1,0 +1,51 @@
+name: Build Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libncurses-dev libtinfo-dev
+      - name: Build (static ncurses = self-contained)
+        run: gcc -std=c11 -O2 -I./include Snake.c lib/Console.c -o snake-linux-x86_64
+             -Wl,-Bstatic -lncurses -ltinfo -Wl,-Bdynamic
+      - uses: actions/upload-artifact@v4
+        with: { name: linux, path: snake-linux-x86_64 }
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build universal (Intel + Apple Silicon)
+        run: clang -std=c11 -O2 -I./include -arch x86_64 -arch arm64
+             Snake.c lib/Console.c -o snake-macos -lncurses
+      - run: cp snake-macos snake.command && chmod +x snake.command
+      - uses: actions/upload-artifact@v4
+        with: { name: macos, path: "snake-macos\nsnake.command" }
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1        # puts MSVC's cl.exe on PATH
+      - run: cl /TC /O2 /I include Snake.c lib\Console.c /Fe:snake-windows-x64.exe
+      - uses: actions/upload-artifact@v4
+        with: { name: windows, path: snake-windows-x64.exe }
+
+  release:
+    needs: [linux, macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            linux/snake-linux-x86_64
+            macos/snake-macos
+            macos/snake.command
+            windows/snake-windows-x64.exe
