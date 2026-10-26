@@ -34,3 +34,6 @@
 # MacOS generated files
 .DS_Store
 .DS_Store?
+
+# Compiled game binary (no extension on macOS/Linux)
+/snake
